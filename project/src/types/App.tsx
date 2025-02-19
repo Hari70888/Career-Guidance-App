@@ -6,6 +6,8 @@ import Features from '../components/Features';
 import CareerPaths from '../components/CareerPaths';
 import Resources from '../components/Resources';
 import Footer from '../components/Footer';
+import PsychometricTest from '../components/PsychometricTest';
+import { AssessmentResults } from '../components/AssessmentResults';
 import JobOpportunities from '../components/JobOpportunities';
 import Login from '../components/Login';
 import Signup from '../components/Signup';
@@ -17,15 +19,21 @@ function App() {
         <Navbar />
         <main>
           <Routes>
-            <Route path="/" element={<Hero />} />
+            <Route path="/" element={
+              <>
+                <Hero />
+                <Features />
+                <CareerPaths />
+                <Resources />
+              </>
+            } />
             <Route path="/job-opportunities" element={<JobOpportunities />} />
             <Route path="/login" element={<Login />} />
             <Route path="/signup" element={<Signup />} />
             {/* other routes */}
+            <Route path="/psychometric-test" element={<PsychometricTest />} />
+            <Route path="/assessment-results" element={<AssessmentResults />} />
           </Routes>
-          <Features />
-          <CareerPaths />
-          <Resources />
         </main>
         <Footer />
       </div>

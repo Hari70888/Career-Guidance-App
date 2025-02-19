@@ -1,0 +1,30 @@
+{
+  "name": "career-guidance-app",
+  "version": "1.0.0",
+  "description": "��#\u0000 \u0000C\u0000a\u0000r\u0000e\u0000e\u0000r\u0000-\u0000G\u0000u\u0000i\u0000d\u0000a\u0000n\u0000c\u0000e\u0000-\u0000A\u0000p\u0000p\u0000\r\u0000 \u0000",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Hari70888/Career-Guidance-App.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Hari70888/Career-Guidance-App/issues"
+  },
+  "homepage": "https://github.com/Hari70888/Career-Guidance-App#readme",
+  "dependencies": {
+    "body-parser": "^1.20.3",
+    "express": "^4.21.2",
+    "googleapis": "^144.0.0",
+    "mongoose": "^8.10.0",
+    "python-shell": "^5.0.0"
+  },
+  "devDependencies": {
+    "typescript": "^5.7.3"
+  }
+}

@@ -1,15 +1,29 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
 const Hero = () => {
+  const [predictedJobRole, setPredictedJobRole] = useState<string>('');
   const navigate = useNavigate();
+
+  const handleSignup = async (formData: any) => {
+    try {
+      const response = await fetch('http://localhost:5000/api/submit', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(formData),
+      });
+
+      const data = await response.json();
+      setPredictedJobRole(data.suitableJobRole);
+    } catch (error) {
+      console.error("Error sending data to the backend:", error);
+    }
+  };
 
   const handleExploreCareers = () => {
     navigate('/job-opportunities');
-  };
-
-  const handleSignup = () => {
-    navigate('/signup');
   };
 
   return (
@@ -36,11 +50,15 @@ const Hero = () => {
                 </div>
                 <div className="mt-3 sm:mt-0 sm:ml-3">
                   <button
-                    onClick={handleSignup}
+                    onClick={() => {
+                      handleSignup({}); // Pass an empty object for now
+                      navigate('/psychometric-test'); // Redirect to Psychometric Test
+                    }}
                     className="w-full flex items-center justify-center px-8 py-3 border border-transparent text-base font-medium rounded-md text-indigo-600 bg-indigo-100 hover:bg-indigo-200 md:py-4 md:text-lg md:px-10"
                   >
                     Take Assessment
                   </button>
+            
                 </div>
               </div>
             </div>
