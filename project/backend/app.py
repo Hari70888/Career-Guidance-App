@@ -1,11 +1,17 @@
 from flask import Flask, request, jsonify
 from flask_cors import CORS
 import json
-import requests
+from auth import auth_bp
+
+
 
 
 app = Flask(__name__)
 CORS(app, resources={r"/api/*": {"origins": "*"}})
+
+# Register authentication blueprint
+app.register_blueprint(auth_bp)
+
 
 # Updated psychometric test questions from the document
 QUESTIONS = [
@@ -83,56 +89,22 @@ def analyze_responses():
     data = request.json
     responses = data.get('responses', {})
 
-    scores = {
-        "technical": sum(1 for resp in responses.values() if resp in ["Science", "Technology", "Engineering", "Coding/Programming"]),
-        "creative": sum(1 for resp in responses.values() if resp in ["Arts", "Drawing/Painting", "Writing", "Design"]),
-        "business": sum(1 for resp in responses.values() if resp in ["Business", "Leadership", "Entrepreneurship"]),
-        "healthcare": sum(1 for resp in responses.values() if resp in ["Healthcare", "Social Sciences", "Helping Others"]),
-        "environmental": sum(1 for resp in responses.values() if resp in ["Environment/Nature", "Sustainability", "Wildlife Conservation"])
-    }
-
-    best_fit = max(scores, key=scores.get)  # Find the category with the highest score
+    # Combine all job roles from all categories
+    all_roles = []
+    for category in CAREER_PREDICTIONS.values():
+        all_roles.extend(category)
     
-    # Prepare data for AI analysis
-    headers = {"Authorization": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoiNTk5NDU0YmItMmQ2NS00NjAyLWI2NDgtOGU2ZDZjODQ5OTUzIiwidHlwZSI6ImFwaV90b2tlbiJ9.SgDWTc85FXx4YrLwG7s6M720jJgatbk3jFKoF7purTQ"}
-    url = "https://api.edenai.run/v2/text/custom_classification"
-    
-    # Convert responses to AI input format
-    response_texts = [f"Question {qid}: {response}" for qid, response in responses.items()]
-    
-    payload = {
-        "providers": "openai",
-        "labels": list(CAREER_PREDICTIONS.keys()),
-        "texts": response_texts,
-        "examples": [
-            ["I enjoy technology and programming", "technical"],
-            ["I love art and creative activities", "creative"],
-            ["I'm interested in business and leadership", "business"],
-            ["I want to help people and work in healthcare", "healthcare"],
-            ["I'm passionate about nature and the environment", "environmental"]
-        ],
-    }
-    
-    # Get AI analysis
-    ai_response = requests.post(url, json=payload, headers=headers)
-    ai_result = json.loads(ai_response.text)
-    
-    # Combine AI analysis with existing predictions
-    ai_predictions = ai_result.get('openai', {}).get('items', [])
-    enhanced_predictions = []
-    
-    for pred in CAREER_PREDICTIONS[best_fit]:
-        enhanced_pred = pred.copy()
-        ai_match = next((p for p in ai_predictions if p['label'] == best_fit), None)
-        if ai_match:
-            enhanced_pred['ai_confidence'] = ai_match['confidence']
-        enhanced_predictions.append(enhanced_pred)
+    # Select a random job role
+    import random
+    random_role = random.choice(all_roles)
     
     return jsonify({
-        "predictions": enhanced_predictions,
-        "responses": responses,
-        "ai_analysis": ai_result
+        "recommended_role": random_role
     })
+
+
+
+
 
 
 

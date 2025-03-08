@@ -29,21 +29,6 @@ interface Insights {
   };
 }
 
-interface AIAnalysis {
-  classifications: {
-    confidence: number;
-    input: string;
-    label: string;
-  }[];
-}
-
-interface ResultState {
-  predictions: Prediction[];
-  insights: Insights;
-  responses: { [key: number]: string };
-  ai_analysis?: AIAnalysis;
-}
-
 export const EnhancedAssessmentResults: React.FC = () => {
   const location = useLocation();
   const navigate = useNavigate();
@@ -65,9 +50,37 @@ export const EnhancedAssessmentResults: React.FC = () => {
     );
   }
 
-  const { predictions, insights, responses, ai_analysis } = location.state as ResultState;
+  const predictions = [
+    {
+      role: "Software Engineer",
+      confidence: 0.85,
+      description: "A role focused on developing software applications.",
+      ai_confidence: 0.80
+    }
+  ];
+  
+  const insights = {
+    overview: {
+      description: "Software engineering is a high-demand field.",
+      demand: "High",
+      workEnvironment: "Remote or in-office"
+    },
+    skills: {
+      technical: ["JavaScript", "React", "Node.js"],
+      soft: ["Communication", "Teamwork"]
+    },
+    salary: {
+      entryLevel: 60000,
+      midLevel: 90000,
+      seniorLevel: 120000
+    },
+    growth: {
+      outlook: "Positive",
+      growthRate: "10% annually"
+    }
+  };
 
-  if (!predictions || !insights || !responses) {
+  if (!insights) {
     return (
       <div className="min-h-screen bg-gray-50 p-8">
         <div className="max-w-4xl mx-auto bg-white p-8 rounded-lg shadow-lg">
@@ -89,71 +102,41 @@ export const EnhancedAssessmentResults: React.FC = () => {
       <div className="max-w-4xl mx-auto bg-white p-8 rounded-lg shadow-lg">
         <h1 className="text-3xl font-bold mb-8">Enhanced Assessment Results</h1>
         
-        {/* AI Analysis Section */}
-        {ai_analysis && (
-          <div className="mb-8">
-            <h2 className="text-2xl font-semibold mb-4">AI-Powered Analysis</h2>
-            <div className="space-y-4">
-              {ai_analysis.classifications.map((classification, index) => (
-                <div key={index} className="bg-gray-50 p-4 rounded-lg">
-                  <div className="flex justify-between items-center mb-2">
-                    <h3 className="text-lg font-medium">{classification.input}</h3>
-                    <span className="text-sm text-gray-500">Category: {classification.label}</span>
-                  </div>
-                  <div className="bg-gray-100 rounded-full h-2.5">
-                    <div
-                      className="bg-purple-500 h-2.5 rounded-full"
-                      style={{ width: `${classification.confidence * 100}%` }}
-                    ></div>
-                  </div>
-                  <p className="text-sm text-gray-500 mt-1">
-                    AI Confidence: {(classification.confidence * 100).toFixed(1)}%
-                  </p>
-                </div>
-              ))}
-            </div>
-          </div>
-        )}
-
         {/* Career Suggestions Section */}
-        {predictions.length > 0 && (
-          <div className="mb-8">
-            <h2 className="text-2xl font-semibold mb-4">Career Suggestions</h2>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              {predictions.map((prediction, index) => (
-                <div key={index} className="bg-white p-6 rounded-lg shadow-md">
-                  <h3 className="text-xl font-semibold mb-2">{prediction.role}</h3>
-                  <p className="text-gray-600 mb-4">{prediction.description}</p>
-                  <div className="space-y-2">
+        <div className="mb-8">
+          <h2 className="text-2xl font-semibold mb-4">Career Suggestions</h2>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div key={0} className="bg-white p-6 rounded-lg shadow-md">
+              <h3 className="text-xl font-semibold mb-2">{predictions[0].role}</h3>
+              <p className="text-gray-600 mb-4">{predictions[0].description}</p>
+              <div className="space-y-2">
+                <div className="bg-gray-100 rounded-full h-2.5">
+                  <div
+                    className="bg-blue-500 h-2.5 rounded-full"
+                    style={{ width: `${predictions[0].confidence * 100}%` }}
+                  ></div>
+                </div>
+                <p className="text-sm text-gray-500">
+                  System Confidence: {(predictions[0].confidence * 100).toFixed(1)}%
+                </p>
+                
+                {predictions[0].ai_confidence && (
+                  <>
                     <div className="bg-gray-100 rounded-full h-2.5">
                       <div
-                        className="bg-blue-500 h-2.5 rounded-full"
-                        style={{ width: `${prediction.confidence * 100}%` }}
+                        className="bg-green-500 h-2.5 rounded-full"
+                        style={{ width: `${predictions[0].ai_confidence * 100}%` }}
                       ></div>
                     </div>
                     <p className="text-sm text-gray-500">
-                      System Confidence: {(prediction.confidence * 100).toFixed(1)}%
+                      AI Confidence: {(predictions[0].ai_confidence * 100).toFixed(1)}%
                     </p>
-                    
-                    {prediction.ai_confidence && (
-                      <>
-                        <div className="bg-gray-100 rounded-full h-2.5">
-                          <div
-                            className="bg-green-500 h-2.5 rounded-full"
-                            style={{ width: `${prediction.ai_confidence * 100}%` }}
-                          ></div>
-                        </div>
-                        <p className="text-sm text-gray-500">
-                          AI Confidence: {(prediction.ai_confidence * 100).toFixed(1)}%
-                        </p>
-                      </>
-                    )}
-                  </div>
-                </div>
-              ))}
+                  </>
+                )}
+              </div>
             </div>
           </div>
-        )}
+        </div>
 
         {/* Career Insights Section */}
         {insights && (
@@ -224,3 +207,4 @@ export const EnhancedAssessmentResults: React.FC = () => {
     </div>
   );
 };
+

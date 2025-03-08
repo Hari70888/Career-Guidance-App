@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import AssessmentResults from './AssessmentResults'; // Import the AssessmentResults component
 
 interface FormData {
   [key: string]: string; // Allow dynamic keys
@@ -54,6 +55,7 @@ const AssessmentForm: React.FC<{ onSubmit: (data: FormData) => void }> = ({ onSu
         </div>
       ))}
       <button type="submit">Submit</button>
+      <AssessmentResults results={Object.keys(formData).map(key => ({ label: key, value: Number(formData[key]) }))} /> {/* Pass transformed formData as results */}
     </form>
   );
 };

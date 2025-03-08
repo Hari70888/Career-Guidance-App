@@ -7,10 +7,18 @@ import CareerPaths from '../components/CareerPaths';
 import Resources from '../components/Resources';
 import Footer from '../components/Footer';
 import PsychometricTest from '../components/PsychometricTest';
-import { AssessmentResults } from '../components/AssessmentResults';
+import AssessmentResults from '../components/AssessmentResults';
+import { EnhancedAssessmentResults } from '../components/EnhancedAssessmentResults';
+import Chart from '../components/Chart';
 import JobOpportunities from '../components/JobOpportunities';
 import Login from '../components/Login';
 import Signup from '../components/Signup';
+
+const sampleResults = [
+  { label: 'Result 1', value: 75 },
+  { label: 'Result 2', value: 85 },
+  { label: 'Result 3', value: 90 },
+];
 
 function App() {
   return (
@@ -30,9 +38,10 @@ function App() {
             <Route path="/job-opportunities" element={<JobOpportunities />} />
             <Route path="/login" element={<Login />} />
             <Route path="/signup" element={<Signup />} />
-            {/* other routes */}
+            <Route path="/chart" element={<Chart data={{ labels: ['January', 'February', 'March'], values: [65, 59, 80] }} />} />
             <Route path="/psychometric-test" element={<PsychometricTest />} />
-            <Route path="/assessment-results" element={<AssessmentResults />} />
+            <Route path="/assessment-results" element={<AssessmentResults results={sampleResults} />} />
+            <Route path="/enhanced-results" element={<EnhancedAssessmentResults />} />
           </Routes>
         </main>
         <Footer />
